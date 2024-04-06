@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Quiz</title>
+    {% include "metrika.html" %}
+    {% block yandex_metrika %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if start == True or auth == 0 %}
+        <style>
+        body {
+            background-image: url("https://klau.club/uploads/posts/2023-01/1675092199_klau-club-p-shvetsiya-alpiiskie-luga-rastenie-krasivo-3.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    {% endif %}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <h1 style="visibility: collapse">Просмотр результатов</h1>
+
+            <nav class="navbar fixed-top bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">КвоккаКвиз</a></a>
+                </div>
+            </nav>
+
+            {% if start == True %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Регистрация в программе взаимности</h5>
+                        <p class="card-text">Заполните все необходимые поля, чтобы продолжить</p>
+                        <form action="/social/reg" method="post">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Имя</label>
+                                    <input name="name" type="text" class="form-control">
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label">Почта</label>
+                                    <input name="mail" type="email" class="form-control">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Создать акканут</button>
+                            <div class="form-text mt-3">
+                                Нажимая кнопку, вы соглашаетесь на
+                                <a target="_blank" href="https://law.quokkaquiz.ru/personal">обработку</a>
+                                персональных данных
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                {% if auth == 1 %}
+                    {% if user.premium == False %}
+                        <div class="alert alert-warning mt-4" role="alert">
+                            Хочешь получить больше преимуществ? Предлагаю тебе подписку <b>QuokkaOne</b>.
+                            Читай подробнее - <a href="/one">тут</a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mt-4" role="alert">
+                            Вы - <b>Premium!</b> Спасибо, что оформили подписку!
+                        </div>
+                    {% endif %}
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Привет, {{ user.name }}!</h5>
+                            <p class="card-text">
+                                У тебя сейчас {{ user.solved }} пройденных квизов, баланс составляет {{ user.balance }}
+                                QC
+                                <br>Твоя почта для получения QC - <b>{{ user.mail }}</b>
+                                <br>Твой ID для групп - <b>{{ user.id }}</b>
+                            </p>
+                            <hr>
+                            <button onclick="showInfo()" class="btn btn-primary" id="infoBut">
+                                Подробнее
+                            </button>
+                            <div id="infoQC" style="display: none;" class="mb-0">
+                                <h5>Как получать QuokkaCoin?</h5>
+                                <ol>
+                                    <li>Пройдите любой квиз</li>
+                                    <li>После прохождения найдите поле ввода с названием "QuokkaConnect"</li>
+                                    <li>Введите туда свою почту - {{ user.mail }}</li>
+                                    <li>Нажмите кнопку "Сохранить"</li>
+                                    <li>КвоккаКоины поступят на ваш баланс через несколько минут</li>
+                                </ol>
+                                <h5>Как потратить QuokkaCoin?</h5>
+                                <ol class="mb-0">
+                                    <li>В вашем личном кабинете QuokkaConnect найдите раздел "Магазин"</li>
+                                    <li>Выберите любой понравившийся вам товар и нажмите "Купить"</li>
+                                    <li>Выберите место получения и введите контактную информацию и нажмите "Офомитьь"
+                                    </li>
+                                    <li>Приблизительно на следующий учебный день заказ будет готов к выдаче</li>
+                                    <li>Всю информацию о статусах заказа вы будите получать на электорнную
+                                        почту {{ user.mail }}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Задания от учителей</h5>
+                            <p class="card-text">
+                                Вот все задания, не забывай нажимать на кнопку "Отправить", чтобы учитель точно получил
+                                твои ответы
+                            </p>
+                            <hr>
+                            <div class="row g-3">
+                                {% for t in user.tasks %}
+                                    {% if t.send != True %}
+                                        <div class="col-md-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ t.title }}</h5>
+                                                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                                                        ID: {{ t.id }}</h6>
+                                                    <p class="card-text">
+                                                        {% if t.done == False %}
+                                                            Выполни задание, чтобы не расстраивать учителя и получить
+                                                            хорошую оценку!
+                                                        {% else %}
+                                                            Ты - молодец! Ты решил правльно {{ t.done }} номера в этом
+                                                            квизе! Так держать!
+                                                        {% endif %}
+                                                    </p>
+                                                    {% if t.done != False %}
+                                                        <a href="/group/{{ t.gid }}/send/{{ t.id }}/{{ user.id }}/{{ t.done }}"
+                                                           class="card-link">Отправить</a>
+                                                    {% else %}
+                                                        <a href="/student/quiz/{{ t.id }}" target="_blank"
+                                                           class="card-link">Пройти</a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Мои заказы</h5>
+                            <p class="card-text">
+                                Вот твои заказы за все время
+                            </p>
+                            <hr>
+                            <button onclick="showOrders()" class="btn btn-primary" id="ordersBut">
+                                Посмотреть
+                            </button>
+                            <div class="list-group" id="ordersCard" style="display: none;">
+                                {% for o in orders|reverse %}
+                                    {% if o.mail == user.mail %}
+                                        <a class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{ o.title }}</h5>
+                                                <small class="text-body-secondary">
+                                                <span class="badge rounded-pill text-bg-primary">
+                                                    {{ o.status }}
+                                                </span>
+                                                </small>
+                                            </div>
+                                            <p class="mb-1">Стоимость: {{ o.price }} QC, Дата
+                                                оформления: {{ o.date }}</p>
+                                            <small class="text-body-secondary">Выдача: {{ o.delivery }}</small>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">История прохождений</h5>
+                            <p class="card-text">
+                                Тут вы сможете посмотреть какие квизы вы проходили и сколько за них получили
+                            </p>
+                            <hr>
+                            <button onclick="showQuizes()" class="btn btn-primary" id="quizBut">
+                                Посмотреть
+                            </button>
+                            <div class="row g-3 mt-3" id="quizCard" style="display: none;">
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        {% for q in user.quizes|reverse %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                                <div class="ms-2 me-auto">
+                                                    <div class="fw-bold">{{ q.title }}</div>
+                                                    + {{ q.points }} QC / {{ q.all_points }}
+                                                </div>
+                                                <span class="badge bg-primary rounded-pill">ID {{ q.id }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3" style="margin-bottom: 100px">
+                        <div class="card-body">
+                            <h5 class="card-title">Магазин</h5>
+                            <p class="card-text">
+                                Твой баланс: {{ user.balance }} QC
+                                <br>Десятки товаров с быстрой доставкой
+                            </p>
+                            <hr>
+                            <button onclick="showShop()" class="btn btn-primary" id="shopBut">
+                                Посмотреть
+                            </button>
+                            <div style="display: none" id="shop">
+                                <div class="row g-3 mt-3">
+                                    {% for s in shop %}
+                                        <div class="col-md-3">
+                                            <div class="card">
+                                                <img src="{{ s.image }}" class="card-img-top" alt="...">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ s.title }}</h5>
+                                                    <h2>{{ s.price }} QC</h2>
+                                                    <p class="card-text">
+                                                        {{ s.text }}
+                                                    </p>
+                                                    {% if user.balance >= s.price %}
+                                                        <button data-bs-toggle="modal"
+                                                                data-bs-target="#shopModal{{ s.id }}"
+                                                                class="btn btn-primary">Купить
+                                                        </button>
+                                                    {% else %}
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-container="body" data-bs-toggle="popover"
+                                                                data-bs-placement="top"
+                                                                data-bs-content="Для покупки не хватает {{ s.price - user.balance }} QC">
+                                                            Купить
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" id="shopModal{{ s.id }}" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                            Покупка товара
+                                                        </h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/shop/buy/{{ s.id }}" method="post">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-8">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">
+                                                                                Информация
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                Заполните все необходимые поля
+                                                                            </p>
+                                                                            <div class="row g-3">
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">
+                                                                                        Фамилия, Имя
+                                                                                    </label>
+                                                                                    <input type="text"
+                                                                                           required
+                                                                                           class="form-control mb-1"
+                                                                                           name="name">
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">
+                                                                                        Телефон
+                                                                                    </label>
+                                                                                    <input type="number"
+                                                                                           required
+                                                                                           class="form-control mb-1"
+                                                                                           name="phone">
+                                                                                </div>
+                                                                                <div class="col-md-8">
+                                                                                    <label class="form-label">
+                                                                                        Самовывоз
+                                                                                    </label>
+                                                                                    <select name="delivery"
+                                                                                            class="form-select">
+                                                                                        <option>
+                                                                                            Школа 1561, корпус 11
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label class="form-label">
+                                                                                        Класс
+                                                                                    </label>
+                                                                                    <input type="text"
+                                                                                           required
+                                                                                           class="form-control mb-1"
+                                                                                           name="class">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">
+                                                                                Оформление
+                                                                            </h5>
+                                                                            <p class="card-text">
+                                                                                {{ s.title }}
+                                                                            </p>
+                                                                            <h3>{{ s.price }} QC</h3>
+                                                                            <hr>
+                                                                            <button type="submit"
+                                                                                    class="btn btn-primary">
+                                                                                Оформить
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% elif auth == 0 %}
+                    <div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1"
+                         role="dialog" id="modalSignin">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content rounded-4 shadow">
+                                <div class="modal-header p-5 pb-4 border-bottom-0">
+                                    <h1 class="fw-bold mb-0 fs-2">Вход</h1>
+                                </div>
+
+                                <div class="modal-body p-5 pt-0">
+                                    {% if code %}
+                                        <form action="/social/code" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input name="code" type="number" class="form-control rounded-3" id="floatingInput"
+                                                       placeholder="123456">
+                                                <label for="floatingInput">Введите код</label>
+                                            </div>
+                                            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">
+                                                Войти
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <form action="/social/log" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input name="mail" type="email" class="form-control rounded-3" id="floatingInput"
+                                                       placeholder="name@example.com">
+                                                <label for="floatingInput">Почта</label>
+                                            </div>
+                                            <button class="w-100 mb-0 btn btn-lg rounded-3 btn-primary" type="submit">
+                                                Войти
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card mt-4" style="display: none">
+                        <div class="card-body">
+                            <h5 class="card-title">Вход в аккаунт</h5>
+                            {% if code %}
+                                <p class="card-text">
+                                    Введите код, отправленный на вашу почту {{ code }}. Если он не пришел в течение
+                                    минуты - проверьте папку <b>Спам</b>
+                                </p>
+                                <form action="/social/code" method="post">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Код</label>
+                                            <input name="code" type="number" class="form-control">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Войти</button>
+                                </form>
+                            {% else %}
+                                <p class="card-text">
+                                    Введите вашу почту
+                                </p>
+                                <form action="/social/log" method="post">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Почта</label>
+                                            <input name="mail" type="email" class="form-control">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Отправить</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% elif auth == 2 %}
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Спасибо за заказ!</h5>
+                            <p class="card-text">
+                                Вы оформили заказ №{{ order.id }} на {{ order.price }} QC. Он будет готов к выдаче на
+                                следующий день в {{ order.delivery }}
+                            </p>
+                            <p class="card-text mb-3">
+                                Уведомление о готовности придет вам на электронную почту {{ order.mail }}
+                            </p>
+                            <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary" style="width: 25%">
+                                    Принят
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="/social/my" class="btn btn-primary mt-3">
+                                Перейти к QuokkaSocial
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <script>
+                const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+                const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+                function showInfo() {
+                    document.getElementById('infoQC').style.display = "block"
+                    document.getElementById('infoBut').style.display = "none"
+                }
+
+                function showOrders() {
+                    document.getElementById('ordersCard').style.display = "block"
+                    document.getElementById('ordersBut').style.display = "none"
+                }
+
+                function showQuizes() {
+                    document.getElementById('quizCard').style.display = "block"
+                    document.getElementById('quizBut').style.display = "none"
+                }
+
+                function showShop() {
+                    document.getElementById('shop').style.display = "block"
+                    document.getElementById('shopBut').style.display = "none"
+                }
+            </script>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

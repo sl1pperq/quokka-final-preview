@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Конструктор квизов</title>
+    {% include "metrika.html" %}
+    {% block yandex_metrika %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        #linkButton {
+            background: none !important;
+            border: none;
+            padding: 0 !important;
+            font-family: arial, sans-serif;
+            text-decoration: none;
+            color: #069;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <h1 style="visibility: collapse">Создание квиза</h1>
+
+            <nav class="navbar fixed-top bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/constructor">КвоккаКвиз</a>
+                </div>
+            </nav>
+
+            <div class="row g-3 mt-4">
+                <div class="col-md-3">
+                    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary rounded-3">
+                        <a href="/constructor?focusquiz"
+                           class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="32" fill="currentColor"
+                                 class="bi bi-box me-2" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                            </svg>
+                            <span class="fs-4">Квиз</span>
+                        </a>
+                        <hr>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <li class="nav-item">
+                                <a onclick="showMainMenu()" id="mainLink" href="#" class="nav-link active"
+                                   aria-current="page">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                                    </svg>
+                                    Главная
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="showAsk()" id="askLink" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                                    </svg>
+                                    Вопросы
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="lookSettings()" id="settingsLink" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+                                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+                                    </svg>
+                                    Настройки
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="showResult()" id="resultLink" href="#" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641zM6.374 1 4.168 8.5H7.5a.5.5 0 0 1 .478.647L6.78 13.04 11.478 7H8a.5.5 0 0 1-.474-.658L9.306 1z"/>
+
+                                    </svg>
+                                    Результаты
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="showShare()" id="shareLink" href="#" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                    </svg>
+                                    Поделиться
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="boardLink" href="/show/board/mode/{{ id }}/1" target="_blank" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M4.318 2.687C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4c0-.374.356-.875 1.318-1.313M13 5.698V7c0 .374-.356.875-1.318 1.313C10.766 8.729 9.464 9 8 9s-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777A5 5 0 0 0 13 5.698M14 4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16s3.022-.289 4.096-.777C13.125 14.755 14 14.007 14 13zm-1 4.698V10c0 .374-.356.875-1.318 1.313C10.766 11.729 9.464 12 8 12s-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10s3.022-.289 4.096-.777A5 5 0 0 0 13 8.698m0 3V13c0 .374-.356.875-1.318 1.313C10.766 14.729 9.464 15 8 15s-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13s3.022-.289 4.096-.777c.324-.147.633-.323.904-.525"/>
+                                    </svg>
+                                    Доска
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="tutorialLink" href="#" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
+                                        <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
+                                    </svg>
+                                    Справка
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="deleteQuizLink" href="/constructor/delete/{{ id }}" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.5.5 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244z"/>
+                                    </svg>
+                                    Удалить квиз
+                                </a>
+                            </li>
+                            <hr>
+                            <li class="nav-item">
+                                <a id="menuLink" href="/constructor?focusquiz" class="nav-link link-body-emphasis"
+                                   style="cursor: pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                         class="bi bi-house me-2 mb-1" viewBox="0 0 16 16">
+                                        <path d="M5.793 1a1 1 0 0 1 1.414 0l.647.646a.5.5 0 1 1-.708.708L6.5 1.707 2 6.207V12.5a.5.5 0 0 0 .5.5.5.5 0 0 1 0 1A1.5 1.5 0 0 1 1 12.5V7.207l-.146.147a.5.5 0 0 1-.708-.708zm3 1a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708zm.707.707L5 7.207V13.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.207z"/>
+                                    </svg>
+                                    В учительскую
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <script>
+                    function uncolor() {
+                        document.getElementById('mainLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('askLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('settingsLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('resultLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('shareLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('tutorialLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('deleteQuizLink').className = "nav-link link-body-emphasis"
+                        document.getElementById('menuLink').className = "nav-link link-body-emphasis"
+                    }
+
+                    function hideCards() {
+                        document.getElementById('main').style.display = "none"
+                        document.getElementById('ask').style.display = "none"
+                        document.getElementById('settings').style.display = "none"
+                        document.getElementById('result').style.display = "none"
+                        document.getElementById('share').style.display = "none"
+                    }
+
+                    function showMainMenu() {
+                        hideCards()
+                        uncolor()
+                        document.getElementById('main').style.display = "block";
+                        document.getElementById('mainLink').className = "nav-link active"
+                    }
+
+                    function showAsk() {
+                        hideCards()
+                        uncolor()
+                        document.getElementById('ask').style.display = "block";
+                        document.getElementById('askLink').className = "nav-link active"
+                    }
+
+                    function lookSettings() {
+                        hideCards()
+                        uncolor()
+                        document.getElementById('settings').style.display = "block";
+                        document.getElementById('settingsLink').className = "nav-link active"
+                    }
+
+                    function showResult() {
+                        hideCards()
+                        uncolor()
+                        document.getElementById('result').style.display = "block";
+                        document.getElementById('resultLink').className = "nav-link active"
+                    }
+
+                    function showShare() {
+                        hideCards()
+                        uncolor()
+                        document.getElementById('share').style.display = "block";
+                        document.getElementById('shareLink').className = "nav-link active"
+                    }
+                </script>
+                <div class="col-md-9">
+
+                    <div id="main">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Создание квиза</h5>
+                                <form action="/save/main/{{ id }}" class="row g-3" method="post">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Название</label>
+                                        <input name="title" type="text" class="form-control" value="{{ quiz.title }}">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Описание</label>
+                                        <textarea name="text" class="form-control" rows="3">{{ quiz.text }}</textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {% set s = quiz.settings %}
+                                        <div class="form-check form-switch">
+                                            {% if s.special == "on" %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="special" checked>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="special">
+                                            {% endif %}
+                                            <label class="form-check-label">
+                                                Специальные возможности
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            {% if s.notify == "on" %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="notify" checked>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="notify">
+                                            {% endif %}
+                                            <label class="form-check-label">
+                                                Уведомление о прохождении
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            {% if s.hide_res == "on" %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="hide_res" checked>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="hide_res">
+                                            {% endif %}
+                                            <label class="form-check-label">
+                                                Скрывать результат
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            {% if s.diploma == "on" %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="diploma" checked>
+                                            {% else %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       role="switch"
+                                                       name="diploma">
+                                            {% endif %}
+                                            <label class="form-check-label">
+                                                Выдавать диплом
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-0">
+                                        {% if quiz.type != 'bee' %}
+                                            {% if quiz.status == "Close" %}
+                                                <a href="/quiz/open/{{ id }}" type="button"
+                                                   class="btn btn-success mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-unlock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Открыть
+                                                </a>
+                                            {% else %}
+                                                <a href="/quiz/close/{{ id }}" type="button"
+                                                   class="btn btn-danger mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-lock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Закрыть
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if quiz.status == "Close" %}
+                                                <a href="/quiz/open/{{ id }}" type="button"
+                                                   class="btn btn-success mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-unlock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Запустить
+                                                </a>
+                                            {% else %}
+                                                <a href="/quiz/close/{{ id }}" type="button"
+                                                   class="btn btn-danger mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-lock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Остановить
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                        <button type="submit" class="btn btn-primary mt-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-floppy-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5z"/>
+                                                <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5zM9 1h2v4H9z"/>
+                                            </svg>
+                                            Сохранить
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">План</h5>
+                                {% if quiz.plan == None or quiz.plan == "None" %}
+                                    <a href="/add/gpt/plan/{{ id }}" type="button"
+                                       class="btn btn-primary position-relative mt-3">
+                                        Составить план квиза
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            AI
+                                        </span>
+                                    </a>
+                                {% else %}
+                                    <div class="accordion mt-3" id="accordionPlan">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapsePlan"
+                                                        aria-expanded="false" aria-controls="collapseTwo">
+                                                    План от нейросети
+                                                </button>
+                                            </h2>
+                                            <div id="collapsePlan" class="accordion-collapse collapse"
+                                                 data-bs-parent="#accordionPlan">
+                                                <div class="accordion-body">
+                                                    {{ quiz.plan | safe }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="ask" style="display: none">
+                        {% for test in quiz.test %}
+                            <div class="card mb-3" id="test{{ test.id }}">
+                                <div class="card-body">
+                                    {% set typi = "Текст" %}
+                                    {% if test.type == "text" %}
+                                        {% set typi = "Текстовый ответ" %}
+                                    {% elif test.type == "choice" %}
+                                        {% set typi = "Выбор ответа" %}
+                                    {% elif test.type == "after_check" %}
+                                        {% set typi = "Ответ с проверкой" %}
+                                    {% elif test.type == "python_code" %}
+                                        {% set typi = "Код на Python" %}
+                                    {% elif test.type == "cross" %}
+                                        {% set typi = "Кроссплатформенный" %}
+                                    {% endif %}
+                                    <h5 class="card-title">{{ typi }}, {{ loop.index0 + 1 }}
+                                        / {{ quiz.test|length }}</h5>
+                                    {% if test.type == "cross" %}
+                                        <div class="alert alert-warning mt-3" role="alert">
+                                            Пожалуйста, не используйте знаки <b>запятой</b> в основном тексте и ответе -
+                                            из
+                                            за
+                                            этого
+                                            квиз может перестать работать в приложении
+                                        </div>
+                                    {% endif %}
+                                    <form action="/save/quiz/{{ id }}/{{ test.type }}/{{ test.id }}" class="row g-3"
+                                          method="post">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Ссылка на фото (опционально)</label>
+                                            <input name="image" type="text" class="form-control"
+                                                   value="{{ test.image }}">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Описание</label>
+                                            <textarea name="text" class="form-control"
+                                                      rows="3">{{ test.text }}</textarea>
+                                            <div class="form-text">
+                                                Поддерживается разметка Markdown. Инструкция -
+                                                <a target="_blank"
+                                                   href="https://gist.github.com/Jekins/2bf2d0638163f1294637">
+                                                    здесь
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mb-1">
+                                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                                            <hr>
+                                        </div>
+                                    </form>
+                                    {% if test.type == "cross" %}
+                                        <form action="/set/cross/answer/{{ id }}/{{ test.id }}" method="post"
+                                              class="mb-3 mt-0">
+                                            <label class="form-label">Короткий ответ</label>
+                                            <input type="text"
+                                                   value="{{ test.answer }}"
+                                                   class="form-control"
+                                                   name="answer">
+                                            <button type="submit" class="btn btn-primary mt-3">Сохранить ответ</button>
+                                            <hr>
+                                        </form>
+                                    {% endif %}
+                                    <div class="col-md-12">
+                                        {% if test.type != "cross" %}
+                                            {% for a in test.answer %}
+                                                <form action="/save/answer/{{ id }}/{{ test.id }}/{{ a.id }}"
+                                                      class="row g-3"
+                                                      method="post">
+                                                    <div class="col-md-12">
+                                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">
+                                                <button type="submit" id="linkButton">
+                                                    Сохранить
+                                                </button>
+                                            </span>
+                                                            <span class="input-group-text">
+                                                <a href="/del/answer/{{ id }}/{{ test.id }}/{{ a.id }}">
+                                                    Удалить
+                                                </a>
+                                            </span>
+                                                            {% if test.type == 'choice' %}
+                                                                {% if a.true == True %}
+                                                                    <span class="input-group-text">
+                                                        <a href="/set/answer/status/{{ id }}/{{ test.id }}/{{ a.id }}/{{ a.true }}">
+                                                            Сделать неправильным
+                                                        </a>
+                                                    </span>
+                                                                {% else %}
+                                                                    <span class="input-group-text">
+                                                        <a href="/set/answer/status/{{ id }}/{{ test.id }}/{{ a.id }}/{{ a.true }}">
+                                                            Сделать правильным
+                                                        </a>
+                                                    </span>
+                                                                {% endif %}
+                                                            {% endif %}
+                                                            <input type="text"
+                                                                   value="{{ a.answer }}"
+                                                                   class="form-control"
+                                                                   name="answer">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% if test.type == "python_code" %}
+                                            <a href="/add/checkpoint/{{ id }}/{{ test.id }}"
+                                               class="btn btn-primary mb-3">
+                                                Создать чекпоинт
+                                            </a>
+
+                                            <div class="row g-3">
+                                                {% for c in test.checkpoints %}
+                                                    <div class="col-md-3">
+                                                        <div class="card mb-3">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">
+                                                                    Чекпоинт №{{ loop.index }}
+                                                                </h5>
+                                                                <form action="/save/checkpoint/{{ id }}/{{ test.id }}/{{ c.id }}"
+                                                                      method="post">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">Ввод</label>
+                                                                        <textarea name="input" class="form-control"
+                                                                                  rows="2">{{ c.input }}</textarea>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">Вывод</label>
+                                                                        <textarea name="output" class="form-control"
+                                                                                  rows="2">{{ c.output }}</textarea>
+                                                                    </div>
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Сохранить
+                                                                    </button>
+                                                                    <a href="/del/checkpoint/{{ id }}/{{ test.id }}/{{ c.id }}"
+                                                                       class="btn btn-outline-danger">
+                                                                        Удалить
+                                                                    </a>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                            <hr>
+                                        {% endif %}
+
+
+                                    </div>
+                                    {% if test.type != "after_check" and test.type != "python_code" and test.type != "cross" %}
+                                        <hr>
+                                        <a href="/add/answer/{{ id }}/{{ test.type }}/{{ test.id }}"
+                                           class="btn btn-primary">
+                                            Добавить ответ
+                                        </a>
+                                    {% elif test.system != None and test.type == "after_check" %}
+                                        <div class="accordion mb-4" id="accordion{{ loop.index0 }}">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapse{{ loop.index0 }}"
+                                                            aria-expanded="false" aria-controls="collapseTwo">
+                                                        Ответ от нейросети
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse{{ loop.index0 }}" class="accordion-collapse collapse"
+                                                     data-bs-parent="#accordion{{ loop.index0 }}">
+                                                    <div class="accordion-body">
+                                                        {{ test.system|safe }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elif test.system == None and test.type == "after_check" %}
+                                        <a href="/add/gpt/answer/{{ id }}/{{ test.id }}" class="btn btn-primary">
+                                            Ответ от нейросети
+                                        </a>
+                                    {% endif %}
+
+                                    {% if test.type != "cross" %}
+                                        <a href="/bank/add/{{ id }}/{{ test.id }}" class="btn btn-primary">
+                                            Пополнить банк
+                                        </a>
+                                    {% endif %}
+                                    <a href="/delete/quiz/{{ id }}/{{ test.id }}" class="btn btn-danger">
+                                        Удалить вопрос
+                                    </a>
+
+
+                                    <hr>
+
+                                    <div class="accordion" id="acc{{ test.id }}">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#text{{ test.id }}" aria-expanded="false"
+                                                        aria-controls="collapseTwo">
+                                                    Качество вопроса
+                                                </button>
+                                            </h2>
+                                            <div id="text{{ test.id }}" class="accordion-collapse collapse"
+                                                 data-bs-parent="#acc{{ test.id }}">
+                                                <div class="accordion-body">
+                                                    {% if test.quality == None %}
+                                                        <a href="/quality/check/{{ quiz.id }}/{{ test.id }}"
+                                                           type="button"
+                                                           class="btn btn-primary position-relative">
+                                                            Проверить вопрос на качество
+                                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    GPT AI
+                                                </span>
+                                                        </a>
+                                                    {% else %}
+                                                        {{ test.quality | safe }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if quiz.type == "web" or quiz.type == 'bee' %}
+                            <div class="btn-group mb-5" role="group" id="newclassic" style="width: 100%">
+                                <a href="/create/text/{{ id }}" type="button" class="btn btn-outline-primary">
+                                    Текстовый ответ
+                                </a>
+                                <a href="/create/choice/{{ id }}" type="button" class="btn btn-outline-primary">
+                                    Выбор ответа
+                                </a>
+                                <a href="/create/after_check/{{ id }}" type="button"
+                                   class="btn btn-outline-primary">
+                                    Ответ с проверкой
+                                </a>
+                                <a href="/create/python_code/{{ id }}" type="button"
+                                   class="btn btn-outline-primary">
+                                    Код на Python
+                                </a>
+                                <button data-bs-toggle="modal" data-bs-target="#bankImport" type="button"
+                                        class="btn btn-outline-primary">
+                                    Импорт
+                                </button>
+                            </div>
+                        {% else %}
+                            <a href="/create/cross/{{ id }}" type="button" id="newcross"
+                               class="btn btn-outline-primary mb-5"
+                               style="width: 100%">
+                                Кросс
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div id="settings" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Расширенные настройки</h5>
+                                <p class="card-text">
+                                    Измените необходимые настройки, а затем не забудьте нажать
+                                    кнопку
+                                    "Сохранить"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="result" style="display: none">
+                        <div class="btn-group mb-3" role="group" style="width: 100%">
+                            <a href="/create/text/{{ id }}" type="button" class="btn btn-outline-primary">
+                                Очистить ответы
+                            </a>
+                            <a href="/constructor/{{ id }}?focusresult" type="button" class="btn btn-outline-primary">
+                                Обновить ответы
+                            </a>
+                        </div>
+                        <ul class="list-group">
+                            {% set needVal = namespace(value=0) %}
+                            {% for res in quiz.result %}
+                                <li class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">
+                                            {{ res.name }}
+                                        </h5>
+                                        <small class="text-body-secondary">{{ res.id }}</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        Результат {{ res.score }} / {{ res.answers|length }}
+                                    </p>
+                                    <small class="text-body-secondary">
+                                        Квиз пройден за {{ res.total }}
+                                    </small>
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <ul class="list-group mb-3 mt-3">
+                                                {% for a in res.answers %}
+                                                    {% if a.is_true == True %}
+                                                        <li class="list-group-item list-group-item-success">
+                                                            {{ a.answer }}
+                                                        </li>
+                                                    {% elif a.is_true == False %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            {{ a.answer }}
+                                                        </li>
+                                                    {% elif a.is_true == "Wait" %}
+                                                        <li class="list-group-item list-group-item-warning">
+                                                            {{ a.answer }}
+                                                            {% set needVal.value = needVal.value + 1 %}
+                                                        </li>
+                                                    {% elif a.is_true == "Checked" %}
+                                                        <li class="list-group-item list-group-item-info">
+                                                            {{ a.answer }}
+                                                        </li>
+                                                    {% elif a.is_true == "Mixed" %}
+                                                        <li class="list-group-item list-group-item-secondary">
+                                                            {{ a.answer }}
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% if needVal.value > 0 %}
+                                        <h6 class="mb-3">
+                                            Поставьте оценку:
+                                        </h6>
+                                        <div class="btn-group" role="group">
+                                            {% for j in range(needVal.value | int + 1) %}
+                                                <a href="/value/user/answer/{{ id }}/{{ res.id }}/{{ loop.index0 }}"
+                                                   type="button" class="btn btn-outline-primary">
+                                                    {{ loop.index0 }}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div id="share" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Поделиться</h5>
+                                <p class="card-text">
+                                    Так о квизе смогут узнать ваши ученики
+                                </p>
+                                <hr>
+
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label">Ссылка на квиз</label>
+                                        <div class="input-group mb-3" style="cursor: pointer">
+                                    <span onclick="copyQuizLink('https://pro.quokkaquiz.ru/student/quiz/{{ id }}')"
+                                          class="input-group-text" id="basic-addon1">
+                                        Скопировать
+                                    </span>
+                                            <input type="text" class="form-control"
+                                                   value="https://pro.quokkaquiz.ru/student/quiz/{{ id }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Номер квиза</label>
+                                        <div class="input-group mb-3" style="cursor: pointer">
+                                    <span onclick="copyQuizNum('{{ id }}')" class="input-group-text" id="basic-addon1">
+                                        Скопировать
+                                    </span>
+                                            <input type="text" class="form-control" value="{{ id }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a target="_blank" href="/qr/create/{{ id }}" type="button"
+                                   class="btn btn-primary">
+                                    Открыть QR-код
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="bankImport" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Импорт из банка
+                                        вопросов</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/bank/import/{{ quiz.id }}" method="post">
+                                        <label class="form-label">Номер задания</label>
+                                        <input name="number" type="number" class="form-control">
+                                        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+                                    </form>
+                                    <hr>
+                                    <a href="/bank" target="_blank" class="btn btn-outline-primary">
+                                        Открыть банк в новой вкладке
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LINK -->
+
+                    <div style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Создание квиза</h5>
+                                <form action="/save/main/{{ id }}" class="row g-3" method="post">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Название</label>
+                                        <input name="title" type="text" class="form-control" value="{{ quiz.title }}">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Описание</label>
+                                        <textarea name="text" class="form-control" rows="3">{{ quiz.text }}</textarea>
+                                    </div>
+                                    <div class="col-12 mt-0">
+                                        {% if quiz.type != 'bee' %}
+                                            {% if quiz.status == "Close" %}
+                                                <a href="/quiz/open/{{ id }}" type="button"
+                                                   class="btn btn-success mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-unlock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Открыть
+                                                </a>
+                                            {% else %}
+                                                <a href="/quiz/close/{{ id }}" type="button"
+                                                   class="btn btn-danger mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-lock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Закрыть
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if quiz.status == "Close" %}
+                                                <a href="/quiz/open/{{ id }}" type="button"
+                                                   class="btn btn-success mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-unlock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Запустить
+                                                </a>
+                                            {% else %}
+                                                <a href="/quiz/close/{{ id }}" type="button"
+                                                   class="btn btn-danger mt-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                         fill="currentColor"
+                                                         class="bi bi-lock-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                                    </svg>
+                                                    Остановить
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                        <hr>
+                                        <button type="submit" class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-floppy-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5H14v-5.5A1.5 1.5 0 0 0 12.5 9h-9A1.5 1.5 0 0 0 2 10.5V16h-.5A1.5 1.5 0 0 1 0 14.5z"/>
+                                                <path d="M3 16h10v-5.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm9-16H4v5.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5zM9 1h2v4H9z"/>
+                                            </svg>
+                                            Сохранить
+                                        </button>
+
+                                        <a href="/dashboard/answers/{{ id }}" type="button" class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-archive-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"/>
+                                            </svg>
+                                            Результаты
+                                        </a>
+                                        <button data-bs-toggle="modal" data-bs-target="#shareModal" type="button"
+                                                class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-share-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/>
+                                            </svg>
+                                            Поделиться
+                                        </button>
+                                        <a href="/constructor?focusquiz" type="button" class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-back mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+                                            </svg>
+                                            Мои квизы
+                                        </a>
+                                        {% if quiz.type == 'bee' %}
+                                            <a href="/show/bee/mode/{{ id }}" type="button" class="btn btn-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                     fill="currentColor"
+                                                     class="bi bi-clipboard-data-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
+                                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zM10 8a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1"/>
+                                                </svg>
+                                                Режим пчелок
+                                            </a>
+                                        {% endif %}
+                                        <a href="/show/board/mode/{{ id }}/1" type="button" class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-clipboard-data-fill mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5zM10 8a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1"/>
+                                            </svg>
+                                            Режим доски
+                                        </a>
+                                        <a href="/constructor/delete/{{ id }}" type="button" class="btn btn-danger">
+                                            Удалить
+                                        </a>
+
+                                        <hr>
+
+                                        <button onclick="showSettings()" id="setButton" type="button"
+                                                class="btn btn-outline-primary">
+                                            Открыть настройки
+                                        </button>
+
+
+                                        <hr>
+
+                                        {% if quiz.protect == False %}
+                                            <div class="card mb-3" style="background-color: indianred; color: white">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">QuokkaQuiz Protect</h5>
+                                                    <p class="card-text">
+                                                        Защита Protect полностью предотвращает любое списывание со
+                                                        стороны
+                                                        учеников.
+                                                        <a href="#" data-bs-toggle="modal"
+                                                           data-bs-target="#protectModal"
+                                                           style="color: white">
+                                                            <b>Включить</b>
+                                                        </a>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="card text-bg-success mb-3">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">QuokkaQuiz Protect</h5>
+                                                    <p class="card-text">
+                                                        Ученики теперь будут честно проходить все квизы - защита
+                                                        включена.
+                                                        <a href="#" data-bs-toggle="modal"
+                                                           data-bs-target="#protectModal"
+                                                           style="color: white">
+                                                            <b>Выключить</b>
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="modal fade" id="protectModal" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-xl">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5">QuokkaQuiz Protect</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h5>Защита включает в себя:</h5>
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item">
+                                                                Ученики не смогут копировать текст на странице
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                Выделение элементов будет недоступно
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                Клик ПКМ и контекстное меню будет отключено
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                Любая вставка ответов из буфера обмена будет остановлена
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                При открытии консоли разработчика квиз будет досрочно
+                                                                завершен
+                                                                из за
+                                                                нарушений правил
+                                                            </li>
+                                                        </ul>
+                                                        <hr>
+                                                        {% if quiz.protect == None %}
+                                                            <button type="button" class="btn btn-primary">
+                                                                Восстановить покупку
+                                                            </button>
+                                                        {% else %}
+                                                            <a href="https://self.payanyway.ru/17113913805872"
+                                                               type="button"
+                                                               class="btn btn-primary" target="_blank">
+                                                                Купить
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div id="set" style="display: none;">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Расширенные настройки</h5>
+                                                    <p class="card-text">
+                                                        Измените необходимые настройки, а затем не забудьте нажать
+                                                        кнопку
+                                                        "Сохранить"
+                                                    </p>
+                                                    <hr>
+                                                    {% set s = quiz.settings %}
+                                                    <div class="form-check form-switch">
+                                                        {% if s.special == "on" %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="special" checked>
+                                                        {% else %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="special">
+                                                        {% endif %}
+                                                        <label class="form-check-label">
+                                                            Специальные возможности
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-switch">
+                                                        {% if s.notify == "on" %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="notify" checked>
+                                                        {% else %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="notify">
+                                                        {% endif %}
+                                                        <label class="form-check-label">
+                                                            Уведомление о прохождении
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-switch">
+                                                        {% if s.hide_res == "on" %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="hide_res" checked>
+                                                        {% else %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="hide_res">
+                                                        {% endif %}
+                                                        <label class="form-check-label">
+                                                            Скрывать результат
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-switch">
+                                                        {% if s.diploma == "on" %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="diploma" checked>
+                                                        {% else %}
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   role="switch"
+                                                                   name="diploma">
+                                                        {% endif %}
+                                                        <label class="form-check-label">
+                                                            Выдавать диплом
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        {% if quiz.plan == None or quiz.plan == "None" %}
+                                            <a href="/add/gpt/plan/{{ id }}" type="button"
+                                               class="btn btn-primary position-relative">
+                                                Составить план квиза
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    AI
+                                </span>
+                                            </a>
+                                        {% else %}
+                                            <div class="accordion mb-4" id="accordionPlan">
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#collapsePlan"
+                                                                aria-expanded="false" aria-controls="collapseTwo">
+                                                            План от нейросети
+                                                        </button>
+                                                    </h2>
+                                                    <div id="collapsePlan" class="accordion-collapse collapse"
+                                                         data-bs-parent="#accordionPlan">
+                                                        <div class="accordion-body">
+                                                            {{ quiz.plan|safe }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Поделится</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input class="form-control"
+                                                           value="https://pro.quokkaquiz.ru/student/quiz/{{ id }}"
+                                                           readonly>
+                                                    <a target="_blank" href="/qr/create/{{ id }}" type="button"
+                                                       class="btn btn-primary mt-3">
+                                                        Скачать QR-код
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card mt-3 mb-5">
+                            <div class="card-body">
+                                <center>
+                                    <h5 class="card-title">Создать новый вопрос</h5>
+                                    <hr>
+                                    {% if quiz.type == "web" or quiz.type == 'bee' %}
+                                        <a href="/create/text/{{ id }}" type="button" class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-chat-dots mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                                <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
+                                            </svg>
+                                            Текстовый ответ
+                                        </a>
+                                        <a href="/create/choice/{{ id }}" type="button" class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-highlighter mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                      d="M11.096.644a2 2 0 0 1 2.791.036l1.433 1.433a2 2 0 0 1 .035 2.791l-.413.435-8.07 8.995a.5.5 0 0 1-.372.166h-3a.5.5 0 0 1-.234-.058l-.412.412A.5.5 0 0 1 2.5 15h-2a.5.5 0 0 1-.354-.854l1.412-1.412A.5.5 0 0 1 1.5 12.5v-3a.5.5 0 0 1 .166-.372l8.995-8.07zm-.115 1.47L2.727 9.52l3.753 3.753 7.406-8.254zm3.585 2.17.064-.068a1 1 0 0 0-.017-1.396L13.18 1.387a1 1 0 0 0-1.396-.018l-.068.065zM5.293 13.5 2.5 10.707v1.586L3.707 13.5z"/>
+                                            </svg>
+                                            Выбор ответа
+                                        </a>
+                                        <a href="/create/after_check/{{ id }}" type="button"
+                                           class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-cup-hot mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                      d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6zM13 12.5a2 2 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5M2.64 13.825 1.123 7h11.754l-1.517 6.825A1.5 1.5 0 0 1 9.896 15H4.104a1.5 1.5 0 0 1-1.464-1.175"/>
+                                                <path d="m4.4.8-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 3.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 6.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 9.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8"/>
+                                            </svg>
+                                            Ответ с проверкой
+                                        </a>
+                                        <a href="/create/python_code/{{ id }}" type="button"
+                                           class="btn btn-outline-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 class="bi bi-braces-asterisk mb-1 mx-1" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                      d="M1.114 8.063V7.9c1.005-.102 1.497-.615 1.497-1.6V4.503c0-1.094.39-1.538 1.354-1.538h.273V2h-.376C2.25 2 1.49 2.759 1.49 4.352v1.524c0 1.094-.376 1.456-1.49 1.456v1.299c1.114 0 1.49.362 1.49 1.456v1.524c0 1.593.759 2.352 2.372 2.352h.376v-.964h-.273c-.964 0-1.354-.444-1.354-1.538V9.663c0-.984-.492-1.497-1.497-1.6M14.886 7.9v.164c-1.005.103-1.497.616-1.497 1.6v1.798c0 1.094-.39 1.538-1.354 1.538h-.273v.964h.376c1.613 0 2.372-.759 2.372-2.352v-1.524c0-1.094.376-1.456 1.49-1.456v-1.3c-1.114 0-1.49-.362-1.49-1.456V4.352C14.51 2.759 13.75 2 12.138 2h-.376v.964h.273c.964 0 1.354.444 1.354 1.538V6.3c0 .984.492 1.497 1.497 1.6M7.5 11.5V9.207l-1.621 1.621-.707-.707L6.792 8.5H4.5v-1h2.293L5.172 5.879l.707-.707L7.5 6.792V4.5h1v2.293l1.621-1.621.707.707L9.208 7.5H11.5v1H9.207l1.621 1.621-.707.707L8.5 9.208V11.5z"/>
+                                            </svg>
+                                            Код на Python
+                                        </a>
+                                    {% else %}
+                                        <a href="/create/cross/{{ id }}" type="button" class="btn btn-outline-primary">
+                                            Кросс-платформа
+                                        </a>
+                                    {% endif %}
+                                    {% if quiz.type != "cross" %}
+                                        <hr>
+                                        <button data-bs-toggle="modal" data-bs-target="#bankImport" type="button"
+                                                class="btn btn-outline-primary">
+                                            Импорт из банка
+                                        </button>
+                                    {% endif %}
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">Уведомление</strong>
+                        <small>Сейчас</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        Изменения были сохранены!
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                if (window.location.href.includes("focusquiz")) {
+                    showAsk()
+                }
+
+                if (window.location.href.includes("focusresult")) {
+                    showResult()
+                }
+
+                if (window.location.href.includes("#")) {
+                    showLiveToast()
+                }
+
+                function copyQuizLink(text) {
+                    navigator.clipboard.writeText(text);
+                    alert("Ссылка на квиз успешно скопирована в буфер обмена!")
+                }
+
+                function copyQuizNum(num) {
+                    navigator.clipboard.writeText(num);
+                    alert("Номер квиза успешно скопирован в буфер обмена!")
+                }
+
+                function showLiveToast() {
+                    const toastLiveExample = document.getElementById('liveToast')
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    toastBootstrap.show()
+                }
+
+                function showSettings() {
+                    document.getElementById('set').style.display = "block"
+                    document.getElementById('setButton').style.display = "none"
+                }
+            </script>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

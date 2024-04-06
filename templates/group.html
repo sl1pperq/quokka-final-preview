@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Quiz</title>
+    {% include "metrika.html" %}
+    {% block yandex_metrika %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <h1 style="visibility: collapse">Просмотр результатов</h1>
+
+            <nav class="navbar fixed-top bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">КвоккаКвиз</a></a>
+                </div>
+            </nav>
+
+            {% if open == 0 %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Группы учеников</h5>
+                        <p class="card-text">
+                            Создавайте группы из учеников, чтобы быстро проверять решенные квизы и задавать домашние
+                            задания
+                        </p>
+                        <a href="/constructor" class="btn btn-primary">Главное меню</a>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#createGroupModal">
+                            Создать группу
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                    {% for g in groups %}
+                        <div class="col-md-3">
+                            {% if g.author == author %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ g.title }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-body-secondary">Группа создана вами</h6>
+                                        <p class="card-text">
+                                            Перейдите в группу для управления
+                                        </p>
+                                        <hr>
+                                        <a href="/group/{{ g.id }}" class="btn btn-primary">Открыть</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Создать новую группу</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/group/create" method="post">
+                                    <label class="form-label">Введите название группы</label>
+                                    <input name="title" type="text" class="form-control"/>
+                                    <button class="btn btn-primary mt-3" type="submit">Создать</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% elif open == 1 %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ group.title }}</h5>
+                        <p class="card-text">Здесь вы сможете управлять вашей группой</p>
+                        <a href="/constructor?focusgroup" class="btn btn-primary">Главное меню</a>
+                        <hr>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addNewStudent">
+                            Добавить участника
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addWork">
+                            Домашка
+                        </button>
+                        <a href="/group" class="btn btn-danger">Удалить группу</a>
+                    </div>
+                </div>
+
+                <hr>
+
+                <ul class="list-group mt-3">
+                    {% for s in group.students %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="me-auto">
+                                <div class="fw-bold">{{ s.name }}</div>
+                                Контакт: {{ s.mail }}
+                                <br>
+                                <button type="button" class="btn btn-success btn-sm rounded mt-2">Написать</button>
+                                <button type="button" class="btn btn-warning btn-sm rounded mt-2">Удалить</button>
+                            </div>
+                            <span class="badge text-bg-primary rounded-pill">ID: {{ s.id }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="modal fade" id="addNewStudent" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить ученика в группу</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/group/{{ group.id }}/new/student" method="post">
+                                    <label class="form-label">Введите номер учащегося (из QuokkaConnect)</label>
+                                    <input name="number" type="number" class="form-control"/>
+                                    <button class="btn btn-primary mt-3" type="submit">Добавить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="addWork" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить домашнее задание</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="card-title">Новая домашка</h5>
+                                <form action="/group/{{ group.id }}/new/work" method="post" class="col-md-6 mt-3">
+                                    <label class="form-label">Введите номер квиза</label>
+                                    <input name="number" type="number" class="form-control">
+                                    <button class="btn btn-primary mt-3" type="submit">
+                                        Создать
+                                    </button>
+                                    <a href="/constructor" target="_blank" class="btn btn-primary mt-3">
+                                        Посмотреть мои квизы
+                                    </a>
+                                </form>
+
+                                <hr>
+
+                                <h5 class="card-title">Все домашки</h5>
+
+                                <div class="accordion mt-3" id="accordionWork">
+                                    {% for w in group.works %}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#a{{ w.id }}"
+                                                        aria-expanded="false" aria-controls="a{{ w.id }}">
+                                                    {{ w.title }}
+                                                </button>
+                                            </h2>
+                                            <div id="a{{ w.id }}" class="accordion-collapse collapse"
+                                                 data-bs-parent="#accordionWork">
+                                                <div class="accordion-body">
+                                                    Тут будут показаны результаты о прохождении квизов
+                                                    <ul class="list-group mt-3">
+                                                    {% for u in w.users %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center col-md-6">
+                                                            {{ u.name }}
+                                                            <span class="badge text-bg-primary rounded-pill">{{ u.result }}</span>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

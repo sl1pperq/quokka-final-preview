@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Quiz</title>
+    {% include "metrika.html" %}
+    {% block yandex_metrika %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <h1 style="visibility: collapse">Просмотр результатов</h1>
+
+            <nav class="navbar fixed-top bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">КвоккаКвиз</a></a>
+                </div>
+            </nav>
+
+            {% if mode == 'classic' %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Номер №{{ num }}</h5>
+                        {% if test.image == None or test.image == "None" %}
+                        {% else %}
+                            <img src="{{ test.image }}" class="img-fluid" alt="Изображение">
+                        {% endif %}
+                        <p class="card-text">
+                            {{ test.text|safe }}
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="btn-group mt-3" role="group" aria-label="Basic outlined example">
+                    {% for q in quiz.test %}
+                        <a href="/show/board/mode/{{ id }}/{{ loop.index }}" type="button"
+                           class="btn btn-outline-primary">
+                            {{ loop.index }}
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <a href="/constructor/{{ quiz.id }}" type="button" class="btn btn-primary mt-3">
+                    Настройки квиза
+                </a>
+            {% elif mode == 'bee' %}
+                {% set lenn = quiz.test | length %}
+                {% for res in quiz.result %}
+                    {% if res.active == True %}
+                        <div class="progress mt-3" role="progressbar" aria-label="Success example"
+                             style="height: 60px; font-size: 25px">
+                            <div class="progress-bar"
+                                 style="width: {{ ((res.score | int / lenn) * 100) | round | int }}%; background-color: {{ res.color }}">
+                                {{ res.name }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <hr class="mt-5 mb-3">
+                <a href="/constructor/{{ quiz.id }}" type="button" class="btn btn-primary">
+                    Настройки квиза
+                </a>
+                <a href="/bee/board/update/{{ quiz.id }}" type="button" class="btn btn-primary">
+                    Обнулить доску
+                </a>
+            {% endif %}
+
+            <div class="row g-3 mt-3">
+                <div class="col-md-5">
+                    <input style="width: 100%" class="form-control form-control-color mb-3" type="color" id="colorPicker"
+                           onchange="changeColor()" value="#17699b">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-danger" onclick="clearCanvas()" style="width: 100%;">Очистить холст</button>
+                </div>
+                <div class="col-md-5">
+                    <input type="range" class="form-range" min="0" max="10" step="0.1" id="thickRange"
+                           onchange="changeThick()">
+                </div>
+            </div>
+            <canvas class="col-12" height="500" style="background-color: whitesmoke" id="myCanvas"></canvas>
+            <br>
+            <div class="d-grid gap-2 col-6 mt-3 mb-5 mx-auto">
+
+            </div>
+            <script>
+                var canvas = document.getElementById("myCanvas");
+                var ctx = canvas.getContext("2d");
+
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight - 100;
+
+                var painting = false;
+                var lastX, lastY;
+                var color = "#17699b";
+                var thick = 2;
+
+                canvas.addEventListener("mousedown", function (e) {
+                    painting = true;
+                    draw(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
+                });
+
+                canvas.addEventListener("mousemove", function (e) {
+                    if (painting) {
+                        draw(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+                    }
+                });
+
+                canvas.addEventListener("mouseup", function (e) {
+                    painting = false;
+                });
+
+                function draw(x, y, isDown) {
+                    if (isDown) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = thick;
+                        ctx.lineJoin = "round";
+                        ctx.moveTo(lastX, lastY);
+                        ctx.lineTo(x, y);
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                    lastX = x;
+                    lastY = y;
+                }
+
+                function clearCanvas() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+
+                function changeColor() {
+                    color = document.getElementById("colorPicker").value;
+                }
+
+                function changeThick() {
+                    thick = document.getElementById("thickRange").value;
+                }
+            </script>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

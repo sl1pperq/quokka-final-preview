@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Quiz</title>
+    {% include "metrika.html" %}
+    {% block yandex_metrika %}{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <h1 style="visibility: collapse">Просмотр результатов</h1>
+
+            <nav class="navbar fixed-top bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">КвоккаКвиз</a>
+                </div>
+            </nav>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Ваш персональный банк вопросов</h5>
+                    <p class="card-text">Вы можете удалять и добавлять вопросы в банк, чтобы удобнее создавать квизы</p>
+                    <a href="/constructor" class="btn btn-primary">Меню автора</a>
+                </div>
+            </div>
+
+            <hr>
+
+            {% for b in bank %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        ID: {{ b.id }}
+                    </div>
+                    <div class="card-body">
+                        {% set typi = "Текст" %}
+                        {% if b.type == "text" %}
+                            {% set typi = "Текстовый ответ" %}
+                        {% elif b.type == "choice" %}
+                            {% set typi = "Выбор ответа" %}
+                        {% elif b.type == "after_check" %}
+                            {% set typi = "Ответ с проверкой" %}
+                        {% elif b.type == "python_code" %}
+                            {% set typi = "Код на Python" %}
+                        {% elif b.type == "cross" %}
+                            {% set typi = "Кроссплатформенный" %}
+                        {% endif %}
+                        <h5 class="card-title">{{ typi }}</h5>
+                        <hr>
+                        {{ b.text | safe }}
+                        <hr>
+                        <a href="/bank/del/{{ b.id }}" class="btn btn-outline-danger">Удалить</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
